@@ -14,7 +14,7 @@ function Sidebar({ open, setOpen }) {
       {/* Mobile sidebar backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 md:hidden"
+          className="fixed inset-0 z-40 bg-gray-300/50 md:hidden"
           onClick={() => setOpen(false)}
         ></div>
       )}
@@ -26,7 +26,7 @@ function Sidebar({ open, setOpen }) {
         }`}
       >
         <div className="flex items-center justify-between h-16 px-4 bg-green-900">
-          <span className="text-xl font-semibold">VegeTrader</span>
+          <span className="text-xl font-semibold">GoviSala</span>
           <button
             onClick={() => setOpen(false)}
             className="text-white focus:outline-none focus:ring-2 focus:ring-white md:hidden"
@@ -57,7 +57,7 @@ function Sidebar({ open, setOpen }) {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white">Admin User</p>
-                <p className="text-xs text-green-300">admin@vegetrader.com</p>
+                <p className="text-xs text-green-300">admin@govisala.uor</p>
               </div>
             </div>
           </div>

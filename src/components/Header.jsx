@@ -16,7 +16,7 @@ function Header({ onToggleSidebar, onLogout }) {
             <Bars3Icon className="h-6 w-6" />
           </button>
           <h1 className="text-xl font-semibold text-gray-900 ml-2 md:ml-0">
-            VegeTrader Admin
+            GoviSala Admin
           </h1>
         </div>
         <div className="flex items-center">
