@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 function Login({ onLogin }) {
@@ -8,11 +9,25 @@ function Login({ onLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     // In a real app, validate against a backend
-    if (email === "admin@govisala.uor" && password === "admin123") {
-      onLogin();
-    } else {
-      setError("Invalid email or password");
-    }
+    axios
+      .post("http://localhost:3210/auth/admin/login", {
+        admin_mail: email,
+        admin_pwd: password,
+      })
+      .then((res) => {
+        console.log(res);
+
+        if (res.status === 200) {
+          // Assuming the response contains a token
+          onLogin();
+        } else {
+          setError("Invalid email or password");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Invalid email or password");
+      });
   };
 
   return (

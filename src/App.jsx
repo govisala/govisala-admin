@@ -1,5 +1,3 @@
-// App.jsx - Main application component
-
 import { useState } from "react";
 import {
   BrowserRouter as Router,
