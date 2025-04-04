@@ -57,7 +57,7 @@ function Sidebar({ open, setOpen }) {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white">Admin User</p>
-                <p className="text-xs text-green-300">admin@govisala.uor</p>
+                <p className="text-xs text-green-300">admin@govisala.lk</p>
               </div>
             </div>
           </div>
