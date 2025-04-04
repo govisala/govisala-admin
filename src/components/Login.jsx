@@ -10,13 +10,11 @@ function Login({ onLogin }) {
     e.preventDefault();
     // In a real app, validate against a backend
     axios
-      .post("http://localhost:3210/auth/admin/login", {
+      .post("http://localhost:3210/admin/login", {
         admin_mail: email,
         admin_pwd: password,
       })
       .then((res) => {
-        console.log(res);
-
         if (res.status === 200) {
           // Assuming the response contains a token
           onLogin();

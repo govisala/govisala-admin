@@ -15,6 +15,7 @@ import ListingManagement from "./components/ListingManagement";
 import PaymentManagement from "./components/PaymentManagement";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
+import { useEffect } from "react";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,15 +23,24 @@ function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    sessionStorage.setItem("isAuthenticated", true);
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    sessionStorage.setItem("isAuthenticated", false);
   };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem("isAuthenticated");
+    if (authStatus) {
+      setIsAuthenticated(authStatus === "true");
+    }
+  }, []);
 
   return (
     <Router>
