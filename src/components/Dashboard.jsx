@@ -1,11 +1,28 @@
 import React from "react";
+import { FaDollarSign, FaList, FaUserClock, FaUser } from "react-icons/fa";
 function Dashboard() {
   // In a real app, these would be fetched from an API
   const stats = [
-    { name: "Total Users", value: "2,345" },
-    { name: "Active Listings", value: "1,879" },
-    { name: "Pending Verifications", value: "12" },
-    { name: "Total Revenue", value: "$9,841.24" },
+    {
+      name: "Total Users",
+      value: "2,345",
+      icon: <FaUser size={24} color="white" />,
+    },
+    {
+      name: "Active Listings",
+      value: "1,879",
+      icon: <FaList size={24} color="white" />,
+    },
+    {
+      name: "Pending Verifications",
+      value: "12",
+      icon: <FaUserClock size={24} color="white" />,
+    },
+    {
+      name: "Total Revenue",
+      value: "$9,841.24",
+      icon: <FaDollarSign size={24} color="white" />,
+    },
   ];
 
   const recentTransactions = [
@@ -55,7 +72,9 @@ function Dashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
-                  <div className="w-6 h-6 text-white"></div>
+                  <div className="w-6 h-6 text-white justify-center items-center flex">
+                    {stat.icon}
+                  </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>

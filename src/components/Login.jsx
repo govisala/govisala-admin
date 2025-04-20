@@ -10,7 +10,7 @@ function Login({ onLogin }) {
     e.preventDefault();
     // In a real app, validate against a backend
     axios
-      .post("http://localhost:3210/admin/login", {
+      .post(import.meta.env.VITE_SERVER_URL + "admin/login", {
         admin_mail: email,
         admin_pwd: password,
       })

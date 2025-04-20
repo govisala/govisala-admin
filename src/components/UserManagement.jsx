@@ -8,6 +8,7 @@ function UserManagement() {
   const [imgModal, setImgModal] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch users on component mount
   useEffect(() => {
@@ -16,20 +17,24 @@ function UserManagement() {
 
   // Fetch all users from the API
   const fetchUsers = () => {
+    setIsLoading(true);
     axios
-      .get("http://localhost:3210/admin/users")
+      .get(import.meta.env.VITE_SERVER_URL + "admin/users")
       .then((res) => {
         setUsers(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error("Error fetching users:", err);
+        setIsLoading(false);
       });
   };
 
   // Handle status change (verify/pending)
   const handleStatusChange = (userId, newStatus) => {
+    setIsLoading(true);
     axios
-      .post("http://localhost:3210/admin/verify-user", {
+      .post(import.meta.env.VITE_SERVER_URL + "admin/verify-user", {
         user_id: userId,
         status: newStatus,
       })
@@ -39,23 +44,28 @@ function UserManagement() {
             user.user_id === userId ? { ...user, user_status: newStatus } : user
           )
         );
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error("Error updating user status:", err);
+        setIsLoading(false);
       });
   };
 
   // Handle user deletion
   const handleDelete = (userId) => {
+    setIsLoading(true);
     axios
-      .delete(`http://localhost:3210/admin/delete-user/${userId}`)
+      .delete(`${import.meta.env.VITE_SERVER_URL}admin/delete-user/${userId}`)
       .then((res) => {
         console.log(res.data);
 
         setUsers(users.filter((user) => user.user_id !== userId));
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error("Error deleting user:", err.response.data.message);
+        setIsLoading(false);
       });
   };
 
@@ -70,8 +80,9 @@ function UserManagement() {
     console.log(editUser);
 
     if (editUser) {
+      setIsLoading(true);
       axios
-        .put("http://localhost:3210/admin/edit-user", editUser)
+        .put(import.meta.env.VITE_SERVER_URL + "admin/edit-user", editUser)
         .then((res) => {
           console.log(res.data);
 
@@ -81,16 +92,18 @@ function UserManagement() {
             )
           );
           setShowModal(false);
+          setIsLoading(false);
         })
         .catch((err) => {
           console.error("Error saving user data:", err.response.data.message);
+          setIsLoading(false);
         });
     }
   };
 
   // View user ID/BR image
   const handleViewImage = (imgUrl) => {
-    setImgUrl("http://localhost:3210/" + imgUrl);
+    setImgUrl(import.meta.env.VITE_SERVER_URL + imgUrl);
     setImgModal(true);
   };
 
@@ -166,85 +179,94 @@ function UserManagement() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers.length === 0 && (
+              {isLoading ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">
+                    Loading...
+                  </td>
+                </tr>
+              ) : filteredUsers.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="text-center py-4">
                     No users found.
                   </td>
                 </tr>
-              )}
-              {filteredUsers.map((user) => (
-                <tr key={user.user_id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {user.user_name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {user.user_mail}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {user.user_role}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {user.user_createdAt?.split("T")[0]}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div
-                      onClick={() => handleViewImage(user.user_docs)}
-                      className="text-sm cursor-pointer text-white bg-green-400 hover:bg-green-600 rounded-full px-2 py-1 text-center"
-                    >
-                      View {">"}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        user.user_status === "verified"
-                          ? "bg-green-100 text-green-800"
-                          : user.user_status === "pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {user.user_status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <button
-                      onClick={() => handleEdit(user)}
-                      className="text-green-600 hover:text-green-900 mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleStatusChange(
-                          user.user_id,
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user.user_id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {user.user_name}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {user.user_mail}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {user.user_role}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {user.user_createdAt?.split("T")[0]}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div
+                        onClick={() => handleViewImage(user.user_docs)}
+                        className="text-sm cursor-pointer text-white bg-green-400 hover:bg-green-600 rounded-full px-2 py-1 text-center"
+                      >
+                        View {">"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           user.user_status === "verified"
-                            ? "pending"
-                            : "verified"
-                        )
-                      }
-                      className="text-blue-600 hover:text-blue-900 mr-2"
-                    >
-                      {user.user_status === "verified" ? "Unverify" : "Verify"}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(user.user_id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                            ? "bg-green-100 text-green-800"
+                            : user.user_status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {user.user_status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="text-green-600 hover:text-green-900 mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStatusChange(
+                            user.user_id,
+                            user.user_status === "verified"
+                              ? "pending"
+                              : "verified"
+                          )
+                        }
+                        className="text-blue-600 hover:text-blue-900 mr-2"
+                      >
+                        {user.user_status === "verified"
+                          ? "Unverify"
+                          : "Verify"}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.user_id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
